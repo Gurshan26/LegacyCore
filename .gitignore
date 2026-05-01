@@ -5,3 +5,4 @@ node_modules/
 .DS_Store
 coverage/
 # DO NOT gitignore cobol/bin/ — the binaries must be committed for Vercel deployment
+.vercel
