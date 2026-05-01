@@ -1,0 +1,62 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. LEAVE-ACCRUAL.
+       AUTHOR. LEGACYCORE-ENGINE.
+      *>==============================================================
+      *> Leave Accrual Calculator
+      *>==============================================================
+       ENVIRONMENT DIVISION.
+       DATA DIVISION.
+       WORKING-STORAGE SECTION.
+       01 HOURS-WORKED      PIC 9(3)V99   VALUE ZEROS.
+       01 EMP-TYPE          PIC X         VALUE 'F'.
+       01 AL-BALANCE        PIC 9(6)V99   VALUE ZEROS.
+       01 SL-BALANCE        PIC 9(6)V99   VALUE ZEROS.
+       01 AL-ACCRUED        PIC 9(4)V9999 VALUE ZEROS.
+       01 SL-ACCRUED        PIC 9(4)V9999 VALUE ZEROS.
+       01 AL-NEW-BAL        PIC 9(6)V99   VALUE ZEROS.
+       01 SL-NEW-BAL        PIC 9(6)V99   VALUE ZEROS.
+       01 AL-RATE-FULLTIME  PIC 9(2)V9999 VALUE 5.8462.
+       01 SL-RATE-FULLTIME  PIC 9(2)V9999 VALUE 2.9231.
+       01 FULLTIME-HOURS    PIC 9(3)V99   VALUE 76.00.
+       01 AL-PERIOD-ACCRUAL PIC 9(4)V9999 VALUE ZEROS.
+       01 SL-PERIOD-ACCRUAL PIC 9(4)V9999 VALUE ZEROS.
+       01 PRORATION-FACTOR  PIC 9V9999    VALUE ZEROS.
+       01 INPUT-LINE        PIC X(80)     VALUE SPACES.
+
+       PROCEDURE DIVISION.
+       MAIN-LOGIC.
+           ACCEPT INPUT-LINE FROM COMMAND-LINE
+           UNSTRING INPUT-LINE DELIMITED BY ','
+               INTO HOURS-WORKED EMP-TYPE AL-BALANCE SL-BALANCE
+           END-UNSTRING
+
+           EVALUATE EMP-TYPE
+               WHEN 'F'
+                   MOVE AL-RATE-FULLTIME TO AL-PERIOD-ACCRUAL
+                   MOVE SL-RATE-FULLTIME TO SL-PERIOD-ACCRUAL
+               WHEN 'P'
+                   COMPUTE PRORATION-FACTOR ROUNDED =
+                       HOURS-WORKED / FULLTIME-HOURS
+                   COMPUTE AL-PERIOD-ACCRUAL ROUNDED =
+                       AL-RATE-FULLTIME * PRORATION-FACTOR
+                   COMPUTE SL-PERIOD-ACCRUAL ROUNDED =
+                       SL-RATE-FULLTIME * PRORATION-FACTOR
+               WHEN 'C'
+                   MOVE ZEROS TO AL-PERIOD-ACCRUAL
+                   MOVE ZEROS TO SL-PERIOD-ACCRUAL
+               WHEN OTHER
+                   MOVE AL-RATE-FULLTIME TO AL-PERIOD-ACCRUAL
+                   MOVE SL-RATE-FULLTIME TO SL-PERIOD-ACCRUAL
+           END-EVALUATE
+
+           MOVE AL-PERIOD-ACCRUAL TO AL-ACCRUED
+           MOVE SL-PERIOD-ACCRUAL TO SL-ACCRUED
+
+           COMPUTE AL-NEW-BAL ROUNDED = AL-BALANCE + AL-ACCRUED
+           COMPUTE SL-NEW-BAL ROUNDED = SL-BALANCE + SL-ACCRUED
+
+           DISPLAY AL-ACCRUED ','
+               SL-ACCRUED ','
+               AL-NEW-BAL ','
+               SL-NEW-BAL
+           STOP RUN.

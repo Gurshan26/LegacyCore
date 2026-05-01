@@ -1,0 +1,44 @@
+.wrap {
+  min-width: 260px;
+  display: grid;
+  gap: 6px;
+}
+
+.button {
+  border: 1px solid #8f6a09;
+  background: linear-gradient(180deg, #f0b429, #c89210);
+  color: #2f2207;
+  border-radius: 6px;
+  height: 40px;
+  padding: 0 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+.progressShell {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progressBar {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b8860b, #f0b429);
+  transition: width 0.08s linear;
+}
+
+.stageText {
+  font-size: 0.74rem;
+  color: var(--ink-3);
+  font-family: 'IBM Plex Mono', monospace;
+}

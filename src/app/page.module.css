@@ -1,0 +1,79 @@
+.page {
+  min-height: 100vh;
+}
+
+.main {
+  width: min(1280px, 94vw);
+  margin: 18px auto 28px;
+  display: grid;
+  gap: 18px;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 18px;
+}
+
+.titleBlock h1 {
+  font-size: clamp(1.7rem, 2.3vw, 2.3rem);
+  line-height: 1.1;
+}
+
+.periodLabel {
+  margin: 6px 0 0;
+  color: var(--ink-3);
+  font-size: 0.95rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.viewSource {
+  border: 1px solid var(--border-2);
+  background: var(--surface);
+  color: var(--ink-2);
+  border-radius: 6px;
+  height: 40px;
+  padding: 0 14px;
+  font-family: 'IBM Plex Mono', monospace;
+  cursor: pointer;
+}
+
+.viewSource:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 70% 30%;
+  gap: 16px;
+  align-items: start;
+}
+
+.tableSection,
+.sideSection {
+  min-width: 0;
+}
+
+@media (max-width: 980px) {
+  .topRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
