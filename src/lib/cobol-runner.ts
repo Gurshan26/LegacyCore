@@ -5,6 +5,7 @@ import { promisify } from 'util';
 
 const execFileAsync = promisify(execFile);
 const BIN_DIR = path.join(process.cwd(), 'cobol', 'bin');
+const LIB_DIR = path.join(process.cwd(), 'cobol', 'lib');
 
 export interface CobolResult {
   stdout: string;
@@ -18,12 +19,23 @@ export async function runCobol(
   timeoutMs = 5000
 ): Promise<CobolResult> {
   const binaryPath = resolveBinaryPath(program);
+  const libraryPath = resolveLibraryPath();
   const argString = args.join(',');
   const started = Date.now();
 
   try {
     const { stdout, stderr } = await execFileAsync(binaryPath, [argString], {
       timeout: timeoutMs,
+      env: {
+        ...process.env,
+        ...(libraryPath
+          ? {
+              LD_LIBRARY_PATH: process.env.LD_LIBRARY_PATH
+                ? `${libraryPath}:${process.env.LD_LIBRARY_PATH}`
+                : libraryPath,
+            }
+          : {}),
+      },
     });
 
     return {
@@ -68,6 +80,15 @@ function resolveBinaryPath(program: string): string {
   }
 
   throw Object.assign(new Error(buildMissingBinaryMessage(program)), { code: 'ENOENT' });
+}
+
+function resolveLibraryPath(): string | null {
+  const key = platformKey();
+  const platformLibDir = path.join(LIB_DIR, key);
+  if (fs.existsSync(platformLibDir)) {
+    return platformLibDir;
+  }
+  return null;
 }
 
 function buildMissingBinaryMessage(program: string): string {

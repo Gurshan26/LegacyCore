@@ -4,15 +4,17 @@
 
 LegacyCore is a payroll processing system where core financial logic (tax, overtime, superannuation, leave accrual) is written in real COBOL. COBOL binaries are executed from Node.js API routes and results are surfaced in a modern dashboard.
 
-## Build COBOL binaries
+## Build COBOL artifacts
 
-Linux deployment binaries (for Vercel):
+Linux deployment binaries and shared libs (for Vercel):
 
 ```bash
 npm run build:cobol
 ```
 
-This writes binaries to `cobol/bin/linux-x64/`.
+This writes:
+- `cobol/bin/linux-x64/*` (executables)
+- `cobol/lib/linux-x64/*` (vendored shared libs like `libcob.so.4`)
 
 Local host binaries (for macOS/Linux local execution):
 
